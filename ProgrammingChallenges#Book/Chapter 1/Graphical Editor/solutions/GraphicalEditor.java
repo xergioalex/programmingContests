@@ -40,7 +40,7 @@ public class GraphicalEditor {
                     this.commandC();
                     break;
                 case 'L':
-                    // commandI(int X, int Y, char C)
+                    // commandL(int X, int Y, char C)
                     this.commandL(Integer.valueOf(token.nextToken())-1, Integer.valueOf(token.nextToken())-1, token.nextToken().charAt(0));
                     break;
                 case 'V':

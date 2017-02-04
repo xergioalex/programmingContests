@@ -1,235 +1,185 @@
 from sys import stdin
-
-class MineField:
-    def __init__(self, n, m):
-        self.n = n
-        self.m = m
-        self.field = [['' for x in range(m)] for y in range(n)]
-
-        # Fill field
-        for i in range(n):
-            line = stdin.readline()
-            for j in range(m):
-                self.field[i][j] = line[j]
-
-    def calcMines(self, i, j):
-        mines = 0
-        for k in range(i-1, i+2):
-            for l in range(j-1, j+2):
-                if (k >= 0 and k < self.n and l >= 0  and l < self.m):
-                    if (self.field[k][l] == '*'):
-                        mines += 1
-
-        return mines;
-
-    def resolveMinesweeper(self):
-        for i in range(self.n):
-            for j in range(self.m):
-                if (self.field[i][j] == '.'):
-                    self.field[i][j] = chr(self.calcMines(i, j) + 48)
-
-    def __str__(self):
-        out = "";
-        for i in range(self.n):
-            for j in range(self.m):
-                out += self.field[i][j];
-
-            if (i != self.n - 1):
-                out+="\n";
-
-        return out;
-
-
+import queue
 
 class Position:
     def __init__(self, x, y):
         self.x = x
         self.y = y
 
+
 class GEditor:
     def __init__(self):
         self.M = 0
         self.N = 0
-        self.picture = [['0' for x in range(250)] for y in range(250)]
-        self.picture = [[False for x in range(250)] for y in range(250)]
+        self.picture = [['' for x in range(255)] for y in range(255)]
+        self.marked  = [[False for x in range(255)] for y in range(255)]
 
-        def processCommand(self, command, token):
-            switch = {
-                'I' : caseI,
-                'C' : caseC,
-                'L' : caseL,
-                'V' : caseV,
-                'H' : caseH,
-                'K' : caseK,
-                'F' : caseF,
-                'S' : caseS
-            }
+    def processCommand(self, command):
+        def I():
+            # commandI(int M, int N)
+            self.commandI(int(command[1]), int(command[2]))
 
-            def caseI(self, token):
-                # commandI(int M, int N)
-                self.commandI(token[1], token[2])
+        def C():
+            self.commandC()
 
-            def caseC(self, token):
-                self.commandC()
+        def L():
+            # commandL(int X, int Y, char C)
+            self.commandL(int(command[1])-1, int(command[2])-1, command[3])
 
-            def caseL(self, token):
-                # commandI(int X, int Y, char C)
-                self.commandL(int(token[1])-1, int(token[2])-1, (token[3])[0])
+        def V():
+            # commandV(int X, int Y1, int Y2, char C)
+            self.commandV(int(command[1])-1, int(command[2])-1, int(command[3])-1, command[4])
 
-            def caseV(self, token):
-                # commandV(int X, int Y1, int Y2, char C)
-                self.commandV(int(token[1])-1, int(token[2])-1, int(token[3])-1, (token[4])[0])
+        def H():
+            # commandH(int X1, int X2, int Y, char C)
+            self.commandH(int(command[1])-1, int(command[2])-1, int(command[3])-1, command[4])
 
-            def caseH(self, token):
-                # commandH(int X1, int X2, int Y, char C)
-                self.commandH(int(token[1])-1, int(token[2])-1, int(token[3])-1, (token[4])[0])
+        def H():
+            # commandH(int X1, int X2, int Y, char C)
+            self.commandH(int(command[1])-1, int(command[2])-1, int(command[3])-1, command[4])
 
-            def caseK(self, token):
-                # commandK(int X1, int X2, int Y1, int Y2, char C)
-                self.commandK(int(token[1])-1, int(token[2])-1, int(token[3])-1, int(token[4])-1, (token[5])[6])
+        def K():
+            # commandK(int X1, int X2, int Y1, int Y2, char C)
+            self.commandK(int(command[1])-1, int(command[2])-1, int(command[3])-1, int(command[4])-1, command[5]);
 
-            def caseF(self, token):
-                # commandF(int X, int Y, char C)
-                self.commandF(int(token[1])-1, int(token[2])-1, (token[3])[0])
+        def F():
+            # commandF(int X, int Y, char C)
+            self.commandF(int(command[1])-1, int(command[2])-1, command[3]);
 
-            def caseS(self, token):
-                # commandS(string Name)
-                self.commandS(token[1]);
+        def S():
+            # commandS(string Name)
+            self.commandS(command[1]);
+            
+        switch = {
+            'I': I,
+            'C': C,
+            'L': L,
+            'V': V,
+            'H': H,
+            'K': K,
+            'F': F,
+            'S': S
+        }
 
-            switch[command](token)
-
-        def commandI(self, M, N):
-            self.M = M;
-            self.N = N;
-
-            for i in range(0, self.N):
-                for j in range(0, self.M):
-                    self.picture[i][j] = 'O'
+        if (command[0] in switch.keys()):
+            switch[command[0]]()
 
 
-#         void commandC() {
-#             for (int i = 0; i < self.N; i++) {
-#                 for (int j = 0; j < self.M; j++) {
-#                     self.picture[i][j] = 'O';
-#                 }
-#             }
-#         }
+    def commandI(self, M, N):
+        self.M = M
+        self.N = N
 
-#         void commandL(int X, int Y, char C) {
-#             self.picture[Y][X] = C;
-#         }
+        for i in range(0, self.N):
+            for j in range(0, self.M):
+                self.picture[i][j] = 'O'
 
-#         void commandV(int X, int Y1, int Y2, char C){
-#             if (Y1 > Y2) {
-#                 Y1 = Y1+Y2;
-#                 Y2 = Y1-Y2;
-#                 Y1 = Y1-Y2;
-#             }
-#             for (int i = Y1; i <= Y2; i++)
-#                 self.picture[i][X] = C;
-#         }
 
-#         void commandH(int X1,int X2,int Y, char C){
-#             if (X1 > X2) {
-#                 X1 = X1+X2;
-#                 X2 = X1-X2;
-#                 X1 = X1-X2;
-#             }
-#             for (int i = X1; i <= X2; i++)
-#                 self.picture[Y][i] = C;
-#         }
+    def commandC(self):
+        for i in range(0, self.N):
+            for j in range(0, self.M):
+                self.picture[i][j] = 'O'
 
-#         void commandK(int X1, int Y1, int X2, int Y2, char C){
-#             if (X1 > X2){
-#                 X1 = X1+X2;
-#                 X2 = X1-X2;
-#                 X1 = X1-X2;
-#             }
-#             if (Y1 > Y2) {
-#                 Y1 = Y1+Y2;
-#                 Y2 = Y1-Y2;
-#                 Y1 = Y1-Y2;
-#             }
-#             for (int i = Y1; i <= Y2; i++) {
-#                 for (int j = X1; j <= X2; j++) {
-#                     self.picture[i][j] = C;
-#                 }
-#             }
-#         }
 
-#         void commandF(int X, int Y, char C){
-#             self.resetMarkedValues();
+    def commandL(self, X, Y, C):
+        self.picture[Y][X] = C
 
-#             char pixel = self.picture[Y][X];
 
-#             self.picture[Y][X] = C;
-#             self.marked[Y][X] = true;
-#             queue<Position*> pixelQueue;
-#             pixelQueue.push(new Position(X, Y));
-#             while(!pixelQueue.empty()){
-#                 Position* temp = pixelQueue.front();
-#                 pixelQueue.pop();
-#                 if(temp->y-1 >= 0 && !self.marked[temp->y-1][temp->x] && self.picture[temp->y-1][temp->x] == pixel){
-#                     self.marked[temp->y-1][temp->x]=true;
-#                     self.picture[temp->y-1][temp->x]=C;
-#                     pixelQueue.push(new Position(temp->x,temp->y-1));
-#                 }
-#                 if(temp->y+1 < self.N && !self.marked[temp->y+1][temp->x] && self.picture[temp->y+1][temp->x] == pixel){
-#                     self.marked[temp->y+1][temp->x]=true;
-#                     self.picture[temp->y+1][temp->x]=C;
-#                     pixelQueue.push(new Position(temp->x,temp->y+1));
-#                 }
-#                 if(temp->x-1 >= 0 && !self.marked[temp->y][temp->x-1] && self.picture[temp->y][temp->x-1] == pixel){
-#                     self.marked[temp->y][temp->x-1]=true;
-#                     self.picture[temp->y][temp->x-1]=C;
-#                     pixelQueue.push(new Position(temp->x-1,temp->y));
-#                 }
-#                 if(temp->x+1 < self.M && !self.marked[temp->y][temp->x+1] && self.picture[temp->y][temp->x+1] == pixel){
-#                     self.marked[temp->y][temp->x+1] = true;
-#                     self.picture[temp->y][temp->x+1] = C;
-#                     pixelQueue.push(new Position(temp->x+1,temp->y));
-#                 }
-#             }
-#         }
+    def commandV(self, X, Y1, Y2, C):
+        if (Y1 > Y2):
+            Y1 = Y1+Y2
+            Y2 = Y1-Y2
+            Y1 = Y1-Y2
+        
+        for i in range(Y1, Y2+1):
+            self.picture[i][X] = C
 
-#         void resetMarkedValues() {
-#             for (int i = 0; i < self.N; i++) {
-#                 for (int j = 0; j < self.M; j++) {
-#                     self.marked[i][j] = false;
-#                 }
-#             }
-#         }
+    def commandH(self, X1, X2, Y, C):
+        if (X1 > X2):
+            X1 = X1+X2
+            X2 = X1-X2
+            X1 = X1-X2
 
-#         /* Writes the picture in the file Name. */
-#         void commandS(char Name[100]) {
-#             printf("%s\n", Name);
-#             self.printGEditor();
-#         }
+        for i in range(X1, X2+1):
+            self.picture[Y][i] = C
 
-#         void printGEditor(){
-#             for (int i = 0; i < self.N; i++) {
-#                 for (int j = 0; j < self.M; j++) {
-#                     printf("%c", self.picture[i][j]);
-#                 }
-#                 printf("\n");
-#             }
-#         }
-# };
+    def commandK(self, X1, Y1, X2, Y2, C):
+        if (X1 > X2):
+            X1 = X1+X2
+            X2 = X1-X2
+            X1 = X1-X2
+
+        if (Y1 > Y2):
+            Y1 = Y1+Y2
+            Y2 = Y1-Y2
+            Y1 = Y1-Y2
+
+        for i in range(Y1, Y2+1):
+            for j in range(X1, X2+1):
+                self.picture[i][j] = C
+
+
+    def commandF(self, X, Y, C):
+        self.resetMarkedValues()
+
+        pixel = self.picture[Y][X]
+
+        self.picture[Y][X] = C
+        self.marked[Y][X] = True
+
+        pixelQueue = queue.Queue()
+        pixelQueue.put(Position(X, Y))
+
+        while (not pixelQueue.empty()):
+            temp = pixelQueue.get()
+            
+            if (temp.y-1 >= 0 and not self.marked[temp.y-1][temp.x] and self.picture[temp.y-1][temp.x] == pixel):
+                self.marked[temp.y-1][temp.x] = True
+                self.picture[temp.y-1][temp.x] = C
+                pixelQueue.put(Position(temp.x,temp.y-1))
+            if (temp.y+1 < self.N and not self.marked[temp.y+1][temp.x] and self.picture[temp.y+1][temp.x] == pixel):
+                self.marked[temp.y+1][temp.x] = True
+                self.picture[temp.y+1][temp.x] = C
+                pixelQueue.put(Position(temp.x,temp.y+1))
+            if (temp.x-1 >= 0 and not self.marked[temp.y][temp.x-1] and self.picture[temp.y][temp.x-1] == pixel):
+                self.marked[temp.y][temp.x-1] = True
+                self.picture[temp.y][temp.x-1] = C
+                pixelQueue.put(Position(temp.x-1,temp.y))
+            if (temp.x+1 < self.M and not self.marked[temp.y][temp.x+1] and self.picture[temp.y][temp.x+1] == pixel):
+                self.marked[temp.y][temp.x+1] = True
+                self.picture[temp.y][temp.x+1] = C
+                pixelQueue.put(Position(temp.x+1,temp.y))
+
+
+    def resetMarkedValues(self):
+        for i in range(0, self.N):
+            for j in range(0, self.M):
+                self.marked[i][j] = False
+    
+
+    # Writes the picture in the file Name.
+    def commandS(self, Name):
+        print(Name)
+        self.printGEditor();
+
+
+    def printGEditor(self):
+        for i in range(0, self.N):
+            for j in range(0, self.M):
+                print(self.picture[i][j], end = "")
+            print()
+
+
 
 # Main program
-def main():
+def main():    
     geditor = GEditor()
 
     for line in stdin:
-        token = line.split();
+        command = line.split()
 
-        command = (token[0])[0]
-
-        if (command == 'X'):
+        if (command[0] == 'X'):
             break
 
-        geditor.processCommand(command, token);
-
+        geditor.processCommand(command)
 
 main()
-

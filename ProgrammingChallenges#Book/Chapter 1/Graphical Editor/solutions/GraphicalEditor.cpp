@@ -38,7 +38,7 @@ class GEditor {
                     this->commandC();
                     break;
                 case 'L':
-                    // commandI(int X, int Y, char C)
+                    // commandL(int X, int Y, char C)
                     scanf("%d %d %c", &X, &Y, &C);
                     this->commandL(X-1, Y-1, C);
                     break;
@@ -193,8 +193,6 @@ class GEditor {
 
 /* Main program */
 int main() {
-    int i, j, n, m, resultIndex = 1;
-
     char inputLine[30];
     char command;
 

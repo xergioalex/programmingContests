@@ -55,7 +55,7 @@ def main():
 
         minefield = MineField(n, m)
         # Resolve minesweeper
-        minefield.resolveMinesweeper();
+        minefield.resolveMinesweeper()
 
         print("Field #%d:" % (resultIndex))
         print(minefield)
