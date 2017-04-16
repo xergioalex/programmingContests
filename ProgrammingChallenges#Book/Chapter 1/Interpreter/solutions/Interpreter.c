@@ -11,6 +11,48 @@ struct Computer {
 
 struct Computer pc;
 
+void resetComputer();
+void instruction0(int d, int s);
+void instruction2(int d, int n);
+void instruction3(int d, int n);
+void instruction4(int d, int n);
+void instruction5(int d, int s);
+void instruction6(int d, int s);
+void instruction7(int d, int s);
+void instruction8(int d, int a);
+void instruction9(int s, int a);
+int runProgram();
+
+/* Main program */
+int main () {
+    int i, cases, index;
+    char inputLine[5];
+    fgets(inputLine, sizeof inputLine, stdin);
+    cases = atoi(inputLine);
+    fgets(inputLine, sizeof inputLine, stdin);
+
+    for (i = 0; i < cases; i++) {
+        resetComputer();
+
+        index = 0;
+        while ((fgets(inputLine, sizeof inputLine, stdin) != NULL) && inputLine[0] != '\n' && inputLine[0] != '\0') {
+            strcpy(pc.RAM[index], inputLine);
+            index++;
+        }
+
+        printf("%d\n", runProgram());
+        
+        if (i != cases-1) {
+            printf("\n");
+        }
+    }
+
+
+    return 0;
+}
+
+
+
 void resetComputer() {
     pc.address = 0;
 
@@ -107,33 +149,4 @@ int runProgram() {
     }
     
     return countInstructions;
-}
-
-
-/* Main program */
-int main () {
-    int i, cases, index;
-    char inputLine[5];
-    fgets(inputLine, sizeof inputLine, stdin);
-    cases = atoi(inputLine);
-    fgets(inputLine, sizeof inputLine, stdin);
-
-    for (i = 0; i < cases; i++) {
-        resetComputer();
-
-        index = 0;
-        while ((fgets(inputLine, sizeof inputLine, stdin) != NULL) && inputLine[0] != '\n' && inputLine[0] != '\0') {
-            strcpy(pc.RAM[index], inputLine);
-            index++;
-        }
-
-        printf("%d\n", runProgram());
-        
-        if (i != cases-1) {
-            printf("\n");
-        }
-    }
-
-
-    return 0;
 }
